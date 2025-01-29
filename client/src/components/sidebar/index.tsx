@@ -2,7 +2,8 @@
 
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsSidebarCollapsed } from "@/state";
-import { useGetProjectsQuery } from "@/state/api";
+import { useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
+import { signOut } from "aws-amplify/auth";
 import {
   AlertCircle,
   AlertOctagon,
@@ -38,6 +39,18 @@ const Sidebar = (props: Props) => {
     (state) => state.global.isSidebarCollapsed,
   );
 
+  const { data: currentUser } = useGetAuthUserQuery({});
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
+  };
+
+  if (!currentUser) return null;
+  const currentUserDetails = currentUser.userDetails;
+
   const sidebarClassNames = `fixed flex flex-col h-[100%] justify-between shadow-xl transition-all duration-300 h-full z-40 dark:bg-black overflow-y-auto bg-white ${isSidebarCollapsed ? "w-0 hidden" : "w-64"}`;
 
   return (
@@ -62,7 +75,12 @@ const Sidebar = (props: Props) => {
 
         {/* Team */}
         <div className="flex items-center gap-5 border-gray-200 border-y-[1.5px] dark:border-gray-700 px-8 py-4">
-          <Image src="https://aj-pm-s3-images.s3.us-east-1.amazonaws.com/logo.png" alt="Logo" width={40} height={40} />
+          <Image
+            src="https://aj-pm-s3-images.s3.us-east-1.amazonaws.com/logo.png"
+            alt="Logo"
+            width={40}
+            height={40}
+          />
           <div>
             <h3 className="font-bold text-md dark:text-gray-200 tracking-wide">
               NxtGen Team
@@ -147,6 +165,32 @@ const Sidebar = (props: Props) => {
             />
           </>
         )}
+      </div>
+      <div className="z-10 flex flex-col items-center gap-4 md:hidden bg-white dark:bg-black mt-32 px-8 py-4 w-full">
+        <div className="flex items-center w-full">
+          <div className="flex justify-center w-9 h-9 align-center">
+            {!!currentUserDetails?.profilePictureUrl ? (
+              <Image
+                src={`https://aj-pm-s3-images.s3.us-east-1.amazonaws.com/${currentUserDetails.profilePictureUrl!}`}
+                alt={currentUserDetails?.username || "User Profile Picture"}
+                width={100}
+                height={50}
+                className="rounded-full h-full object-cover"
+              />
+            ) : (
+              <User className="rounded-full w-6 h-6 dark:text-white cursor-pointer self-center" />
+            )}
+          </div>
+          <span className="mx-3 text-gray-800 dark:text-white">
+            {currentUserDetails?.username}
+          </span>
+          <button
+            className="md:block bg-blue-400 hover:bg-blue-500 px-4 py-2 rounded font-bold text-white text-xs self-start"
+            onClick={handleSignOut}
+          >
+            Sign out
+          </button>
+        </div>
       </div>
     </div>
   );
