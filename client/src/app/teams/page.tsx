@@ -24,7 +24,43 @@ const columns: GridColDef[] = [
   { field: "id", headerName: "Team ID", width: 100 },
   { field: "teamName", headerName: "Team Name", width: 200 },
   { field: "productOwnerUsername", headerName: "Product Owner", width: 200 },
-  { field: "projectManagerUsername", headerName: "Project Manager", width: 200 }
+  { field: "projectManagerUsername", headerName: "Project Manager", width: 200 },
+  {
+      field: "productOwnerProfilePictureUrl",
+      headerName: "Product Owner",
+      width: 100,
+      renderCell: (params) => (
+        <div className="flex justify-center items-center w-full h-full">
+          <div className="w-9 h-9">
+            <Image
+              src={`https://aj-pm-s3-images.s3.us-east-1.amazonaws.com/${params.value}`}
+              alt={params.row.username}
+              width={100}
+              height={50}
+              className="rounded-full h-full object-cover"
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+        field: "projectManagerProfilePictureUrl",
+        headerName: "Project Manager",
+        width: 100,
+        renderCell: (params) => (
+          <div className="flex justify-center items-center w-full h-full">
+            <div className="w-9 h-9">
+              <Image
+                src={`https://aj-pm-s3-images.s3.us-east-1.amazonaws.com/${params.value}`}
+                alt={params.row.username}
+                width={100}
+                height={50}
+                className="rounded-full h-full object-cover"
+              />
+            </div>
+          </div>
+        ),
+      },
 ];
 
 const Teams = () => {
