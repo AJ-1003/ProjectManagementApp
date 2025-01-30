@@ -11,6 +11,7 @@ import {
 import { dataGridClassNames, dataGridSxStyles } from "@/lib/utills";
 import Header from "@/components/header";
 import { useGetTeamsQuery } from "@/state/api";
+import Image from "next/image";
 
 const CustomToolbar = () => (
   <GridToolbarContainer className="flex gap-2 toolbar">
@@ -23,7 +24,7 @@ const columns: GridColDef[] = [
   { field: "id", headerName: "Team ID", width: 100 },
   { field: "teamName", headerName: "Team Name", width: 200 },
   { field: "productOwnerUsername", headerName: "Product Owner", width: 200 },
-  { field: "projectManagerUsername", headerName: "Project Manager", width: 200 },
+  { field: "projectManagerUsername", headerName: "Project Manager", width: 200 }
 ];
 
 const Teams = () => {
